@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('사진 출처')}"></head>
+<body>
+
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container">
+    <div class="page-head">
+        <p class="eyebrow">Credits</p>
+        <h1>사진 출처</h1>
+        <p class="muted">
+            모든 사진은 자유 라이선스(CC0, CC BY, CC BY-SA)로 공개된 iNaturalist의 야외 관찰 기록에서 가져왔습니다.
+            사진이 없는 동물은 준비 중 이미지로 표시됩니다.
+        </p>
+    </div>
+
+    <table class="credit-table">
+        <thead>
+        <tr>
+            <th>동물</th>
+            <th>저작자</th>
+            <th>라이선스</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="animal : ${animals}">
+            <td><a th:href="@{/monuments/{id}(id=${animal.id})}" th:text="${animal.speciesName}">수달</a></td>
+            <td><a th:href="${animal.photoCredit.sourceUrl}" target="_blank" rel="noopener"
+                   th:text="${animal.photoCredit.author}">작가</a></td>
+            <td><a th:href="${animal.photoCredit.licenseUrl}" target="_blank" rel="noopener license"
+                   th:text="${animal.photoCredit.license}">CC BY 4.0</a></td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+</body>
+</html>

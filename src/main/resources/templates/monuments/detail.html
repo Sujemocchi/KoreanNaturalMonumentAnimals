@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${monument.speciesName})}"></head>
+<body>
+
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container">
+    <p class="back-link"><a th:href="@{/monuments}">← 목록으로</a></p>
+
+    <article class="detail">
+        <figure class="detail-figure">
+            <img class="detail-image" th:src="@{${monument.imageUrl}}" th:alt="${monument.speciesName}">
+            <figcaption th:replace="~{fragments/layout :: credit(${monument.photoCredit})}"></figcaption>
+        </figure>
+
+        <div class="detail-body">
+            <span th:replace="~{fragments/layout :: badge(${monument.categoryCode}, ${monument.categoryName})}"></span>
+            <h1 class="detail-title" th:text="${monument.speciesName}">진도개</h1>
+            <p class="detail-scientific" th:if="${monument.scientificName != null}"
+               th:text="${monument.scientificName}">Canis lupus familiaris</p>
+
+            <table class="info-table">
+                <tr>
+                    <th>국가유산명</th>
+                    <td th:text="${monument.officialName}">진도의 진도개</td>
+                </tr>
+                <tr>
+                    <th>분류</th>
+                    <td th:text="${monument.categoryName}">포유류</td>
+                </tr>
+                <tr>
+                    <th>분야</th>
+                    <td th:text="${monument.fieldName}">축양동물</td>
+                </tr>
+                <tr>
+                    <th>지정일</th>
+                    <td th:text="${monument.designatedDate}">1962.12.07</td>
+                </tr>
+                <tr>
+                    <th>소재지</th>
+                    <td th:text="${monument.region ?: '특정 지역 없음 (종 자체가 지정됨)'}">전라남도</td>
+                </tr>
+                <tr>
+                    <th>학명</th>
+                    <td th:text="${monument.scientificName ?: '정보 준비 중'}"
+                        th:classappend="${monument.scientificName == null} ? 'muted' : 'scientific'">정보 준비 중</td>
+                </tr>
+            </table>
+
+            <section class="detail-section">
+                <h2>소개</h2>
+                <p th:if="${monument.description != null}" th:text="${monument.description}">소개 글</p>
+                <p class="muted" th:if="${monument.description == null}">소개 글 준비 중입니다.</p>
+            </section>
+
+            <section class="detail-section" th:if="${!monument.relatedPlaces.isEmpty()}">
+                <h2>관련 지정 장소</h2>
+                <ul class="place-list">
+                    <li th:each="place : ${monument.relatedPlaces}">
+                        <span th:replace="~{fragments/layout :: badge(${place.fieldCode}, ${place.fieldName})}"></span>
+                        <strong th:text="${place.name}">광릉 크낙새 서식지</strong>
+                        <span class="muted">
+                            <th:block th:if="${place.region != null}" th:text="${place.region} + ' · '">경기도 · </th:block>
+                            <th:block th:text="'지정일 ' + ${place.designatedDate}">지정일 1962.12.07</th:block>
+                        </span>
+                    </li>
+                </ul>
+            </section>
+
+            <p class="detail-source" th:if="${monument.sourceUrl != null}">
+                <a th:href="${monument.sourceUrl}" target="_blank" rel="noopener">국가유산포털에서 보기</a>
+            </p>
+        </div>
+    </article>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+</body>
+</html>

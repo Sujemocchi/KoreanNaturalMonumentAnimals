@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('홈')}"></head>
+<body>
+
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container home">
+    <section class="intro">
+        <p class="eyebrow">Natural Monuments of Korea</p>
+        <h1 class="intro-title">우리 곁의 천연기념물,<br>보호받는 동물들을 만나보세요</h1>
+        <p class="intro-text">국가가 지정해 보호하는 야생동물과 토종 가축을 한곳에 모았습니다.</p>
+    </section>
+
+    <th:block th:if="${featured != null}">
+        <a class="featured" th:href="@{/monuments/{id}(id=${featured.id})}">
+            <img class="featured-image" th:src="@{${featured.imageUrl}}" th:alt="${featured.speciesName}">
+            <div class="featured-info">
+                <p class="featured-label">무작위로 만나는 천연기념물</p>
+                <span th:replace="~{fragments/layout :: badge(${featured.categoryCode}, ${featured.categoryName})}"></span>
+                <h2 class="featured-name" th:text="${featured.speciesName}">수달</h2>
+                <p class="featured-scientific" th:if="${featured.scientificName != null}"
+                   th:text="${featured.scientificName}">Lutra lutra</p>
+                <p class="featured-meta">
+                    지정일 <span th:text="${featured.designatedDate}">1982.11.16</span>
+                </p>
+            </div>
+        </a>
+        <p th:replace="~{fragments/layout :: credit(${featured.photoCredit})}"></p>
+    </th:block>
+
+    <section class="featured featured-empty" th:if="${featured == null}">
+        <p>등록된 천연기념물 동물이 없습니다.</p>
+    </section>
+
+    <div class="home-actions">
+        <a class="button" th:href="@{/monuments}">천연기념물 목록 보기</a>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+</body>
+</html>

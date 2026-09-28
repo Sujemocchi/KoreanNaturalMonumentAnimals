@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('목록')}"></head>
+<body>
+
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container">
+    <div class="page-head">
+        <p class="eyebrow">Collection</p>
+        <h1>천연기념물 동물 목록 <small class="count" th:text="${result.animals.size()} + '건'">71건</small></h1>
+    </div>
+
+    <div class="toolbar">
+        <!-- Category tabs keep the current search keyword -->
+        <nav class="category-tabs" aria-label="분류">
+            <a class="tab" th:href="${result.q == null} ? @{/monuments} : @{/monuments(q=${result.q})}"
+               th:classappend="${result.selectedCategory == null} ? 'active'">전체</a>
+            <a class="tab" th:each="category : ${result.categories}"
+               th:href="${result.q == null} ? @{/monuments(category=${category})} : @{/monuments(category=${category}, q=${result.q})}"
+               th:classappend="${result.selectedCategory == category} ? 'active'"
+               th:text="${category.displayName}">조류</a>
+        </nav>
+
+        <!-- Search keeps the current category -->
+        <form class="search-form" th:action="@{/monuments}" method="get" role="search">
+            <input type="hidden" name="category" th:if="${result.selectedCategory != null}" th:value="${result.selectedCategory}">
+            <input type="search" name="q" th:value="${result.q}" placeholder="이름으로 검색 (예: 황새)" aria-label="이름 검색">
+            <button type="submit" class="button">검색</button>
+        </form>
+    </div>
+
+    <div class="empty" th:if="${result.animals.isEmpty()}">
+        <p th:if="${result.q != null}" th:text="|“${result.q}”에 해당하는 천연기념물 동물이 없습니다.|">“호랑이”에 해당하는 천연기념물 동물이 없습니다.</p>
+        <p th:if="${result.q == null}">해당 분류의 천연기념물 동물이 없습니다.</p>
+        <a th:href="@{/monuments}">전체 목록 보기</a>
+    </div>
+
+    <ul class="card-grid">
+        <li th:each="monument : ${result.animals}">
+            <a class="card" th:href="@{/monuments/{id}(id=${monument.id})}">
+                <div class="card-media">
+                    <img class="card-image" th:src="@{${monument.imageUrl}}" th:alt="${monument.speciesName}" loading="lazy">
+                    <span th:replace="~{fragments/layout :: badge(${monument.categoryCode}, ${monument.categoryName})}"></span>
+                </div>
+                <div class="card-body">
+                    <h2 class="card-title" th:text="${monument.speciesName}">수달</h2>
+                    <p class="card-scientific" th:if="${monument.scientificName != null}"
+                       th:text="${monument.scientificName}">Lutra lutra</p>
+                </div>
+            </a>
+        </li>
+    </ul>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+</body>
+</html>
